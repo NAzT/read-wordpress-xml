@@ -10,45 +10,17 @@ $rows = array();
 
 $private_posts_ids = array();
 
-$item = $xml->channel->item;
 foreach ($xml->channel->item as $item) {
-  $currentRow = new stdClass;
-  // Pull non-namespaced items
-  foreach ($item as $name => $value) {
-    // Special-case tags and categories, where we want to pull the
-    // nicename attribute
-    if ($name == 'category') {
-      $attributes = $value->attributes();
-      $domain = $attributes['domain'];
-      $nicename = $attributes['nicename'];
-      // Capture the nicename attribute and the value
-      if ($domain == 'category') {
-        $currentRow->category[] = (string)$nicename;
-        $currentRow->category_value[] = (string)$value;
-      }
-      // 'tag' for WXR 1.0, 'post_tag' for WXR 1.1
-      else if ($domain == 'tag' || $domain == 'post_tag') {
-        $currentRow->tag[] = (string)$nicename;
-        $currentRow->tag_value[] = (string)$value;
-      }
-    }
-    else {
-      $currentRow->$name = (string)$value;
-    }
-  }
-
   // list all namespaces
   $namespaces = $item->getNameSpaces(TRUE);
-
   //filter only wp namespace
-
   $wp_post = $item->children($namespaces['wp']);
   if ($wp_post->status == 'private') {
     $private_posts_ids[] = (int)$wp_post->post_id;
-    //echo $item->asXML(); echo "\n\n";
+    echo $item->asXML(); echo "\n\n";
   }
  }
 
- print_r($private_posts_ids);
+ // print_r($private_posts_ids);
 
 ?>
