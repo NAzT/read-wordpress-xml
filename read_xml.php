@@ -35,10 +35,14 @@ foreach ($xml->channel->item as $item) {
     }
   }
 
-$namespaces = $item->getNameSpaces(TRUE);
-$item_ns = $item->children($namespaces['wp']);
-  if ($item_ns->post_type == 'attachment' && in_array($item_ns->post_parent, $docs_id) && 
-    strpos($item_ns->attachment_url, 'png') === FALSE) {
+  // list all namespaces
+  $namespaces = $item->getNameSpaces(TRUE);
+
+  //filter only wp namespace
+  $wp_post = $item->children($namespaces['wp']);
+
+  if ($wp_post->post_type == 'attachment' && in_array($wp_post->post_parent, $docs_id) && 
+    strpos($wp_post->attachment_url, 'png') === FALSE) {
     echo $item->asXML();
     echo "\n\n";
   }
